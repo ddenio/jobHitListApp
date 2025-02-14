@@ -1,24 +1,28 @@
 import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+import { Client, Databases, ID } from "appwrite";
 
-setupCounter(document.querySelector('#counter'))
+const client = new Client()
+    .setEndpoint('https://cloud.appwrite.io/v1')
+    .setProject('67afce56002e9f87f347');
+
+const databases = new Databases(client);
+
+const promise = databases.createDocument(
+    '67afcf0e000ab2f488e3',
+    '67afcf2e0003c540a67c',
+    ID.unique(),
+    { "company-name": "100Devs",
+      "date-added": new Date(),
+      "role": "software engineer",
+      "location": "Philly",
+      "position-type": "full time",
+      "source": "https://100devs.org"
+     }
+);
+
+promise.then(function (response) {
+    console.log(response);
+}, function (error) {
+    console.log(error);
+});
