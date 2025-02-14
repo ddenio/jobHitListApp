@@ -8,6 +8,14 @@ const client = new Client()
 
 const databases = new Databases(client);
 
+const form = document.querySelector('form')
+
+form.addEventListener('submit', addJob)
+
+function addJob(e){
+  e.preventDefault()
+}
+
 const promise = databases.createDocument(
     '67afcf0e000ab2f488e3',
     '67afcf2e0003c540a67c',
