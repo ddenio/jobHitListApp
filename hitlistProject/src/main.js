@@ -36,6 +36,7 @@ form.reset()
 }
 
 async function addJobsToDom(){
+  document.querySelector('ul').innerHTML = ""
   let response = await databases.listDocuments(
     '67afcf0e000ab2f488e3',
     '67afcf2e0003c540a67c',
@@ -44,10 +45,43 @@ async function addJobsToDom(){
 
   response.documents.forEach((job)=>{
     const li = document.createElement('li')
-    li.textContent = `${job['company-name']} ${job['date-added']} ${job['role']} ${job['location']} ${job['position-type']} ${job['source']}`
+    li.textContent = `${job['company-name']} ${job['date-added']} ${job['role']} ${job['location']} ${job['position-type']} ${job['source']} coffee chat? ${job['chat']} `
+
+    li.id = job.$id
+
+    const deleteBtn = document.createElement('button')
+    deleteBtn.textContent = 'Destroy'
+    deleteBtn.onclick = () => removeJob(job.$id)
+    li.appendChild(deleteBtn)
+
+    const coffeeBtn = document.createElement('button')
+    coffeeBtn.textContent = 'Coffee'
+    coffeeBtn.onclick = () => updateChat(job.$id)
+
+    li.appendChild(coffeeBtn)
+
     document.querySelector('ul').appendChild(li) 
   })
 
+  async function removeJob(id){
+    const result = await databases.deleteDocument(
+      '67afcf0e000ab2f488e3',
+      '67afcf2e0003c540a67c',
+      id // documentId
+  );
+  document.getElementById(id).remove()
+  }
+
+  async function updateChat(id){
+    const result = await databases.updateDocument(
+      '67afcf0e000ab2f488e3',
+      '67afcf2e0003c540a67c',
+      id, // documentId
+      {'chat': true} // data (optional)
+      // permissions (optional)
+  );
+  result.then(function() {location.reload()})
+  }
   // promise.then(function (response) {
 //     console.log(response);
 // }, function (error) {
@@ -55,7 +89,7 @@ async function addJobsToDom(){
 // });
 }
 
-//addJobsToDom()
+addJobsToDom()
 
 // promise.then(function (response) {
 //     console.log(response);
