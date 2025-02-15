@@ -14,7 +14,7 @@ form.addEventListener('submit', addJob)
 
 function addJob(e){
   e.preventDefault()
-  const promise = databases.createDocument(
+  const job = databases.createDocument(
     '67afcf0e000ab2f488e3',
     '67afcf2e0003c540a67c',
     ID.unique(),
@@ -26,15 +26,36 @@ function addJob(e){
       "source": e.target.source.value
      }
 );
-promise.then(function (response) {
-  console.log(response);
+job.then(function (response) {
+  //console.log(response);
+  addJobsToDom()
 }, function (error) {
   console.log(error);
 });
 form.reset()
 }
 
+async function addJobsToDom(){
+  let response = await databases.listDocuments(
+    '67afcf0e000ab2f488e3',
+    '67afcf2e0003c540a67c',
+  );
+  //console.log(response.documents[1])
 
+  response.documents.forEach((job)=>{
+    const li = document.createElement('li')
+    li.textContent = `${job['company-name']} ${job['date-added']} ${job['role']} ${job['location']} ${job['position-type']} ${job['source']}`
+    document.querySelector('ul').appendChild(li) 
+  })
+
+  // promise.then(function (response) {
+//     console.log(response);
+// }, function (error) {
+//     console.log(error);
+// });
+}
+
+//addJobsToDom()
 
 // promise.then(function (response) {
 //     console.log(response);
